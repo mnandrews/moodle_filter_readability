@@ -30,4 +30,4 @@ $string['embedimages'] = 'Embed images';
 $string['embedimages_desc'] = 'Turns URLs into in page previews';
 $string['filtername'] = 'readability';
 $string['token_title'] = 'API token';
-$string['token_description'] = 'Please obtain a api code from readability.com';
+$string['token_description'] = 'Please obtain a api code from <a href="http://readability.com">readability.com</a>';

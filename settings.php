@@ -31,18 +31,18 @@ if ($ADMIN->fulltree) {
         get_string('token_description', 'filter_readability'), 'token', PARAM_NOTAGS));
         
     $settings->add(new admin_setting_configcheckbox('filter_readability_toggle_intro',
-            get_string('intro', 'filter_readbility'),
-            get_string('intro_desc', 'filter_readbility'),
+            get_string('intro', 'filter_readability'),
+            get_string('intro_desc', 'filter_readability'),
             1));
             
     $settings->add(new admin_setting_configcheckbox('filter_readability_toggle_image',
-            get_string('image', 'filter_readbility'),
-            get_string('image_desc', 'filter_readbility'),
+            get_string('image', 'filter_readability'),
+            get_string('image_desc', 'filter_readability'),
             1));
             
      $settings->add(new admin_setting_configcheckbox('filter_readability_toggle_info',
-            get_string('info', 'filter_readbility'),
-            get_string('info_desc', 'filter_readbility'),
+            get_string('info', 'filter_readability'),
+            get_string('info_desc', 'filter_readability'),
             1));
 
         
