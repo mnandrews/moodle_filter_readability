@@ -11,7 +11,7 @@ Please note this is an early release that does work on 2.6 but I doubt conforms 
 <li>Create an account on readibility.com and generate an API key (it's under Settings > Account & scroll down the page to API Keys)</li>
 <li>Place the files from this repository into your moodle filter directory</li>
 <li>3) visit yourmoodlesite/admin to install and enter your API key</li>
-</ul>
+</ol>
 
 <p>If this looks interesting please fork and further develop, i'm reaching my limit of php knowledge. - Thanks!</p>
 
