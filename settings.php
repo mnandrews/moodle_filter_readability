@@ -16,9 +16,9 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * @package    plugintype
- * @subpackage pluginname
- * @copyright  2010 David Mudrak <david@moodle.com>
+ * @package    filter
+ * @subpackage urltoreadibility
+ * @copyright  2014 Mark Andrews <mnandrews@me.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 

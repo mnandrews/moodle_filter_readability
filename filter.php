@@ -22,8 +22,8 @@
  * Filter converting URLs in the text to HTML links
  *
  * @package    filter
- * @subpackage urltolink
- * @copyright  2010 David Mudrak <david@moodle.com>
+ * @subpackage urltoreadibility
+ * @copyright  2013 Mark Andrews <mnandrews@me.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
