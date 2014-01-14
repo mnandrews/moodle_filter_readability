@@ -150,10 +150,20 @@ class filter_readability extends moodle_text_filter {
         $readability_token = $CFG->filter_readability_token;
         
         /* START ----- Code to extract URL's, place into arrays and transform into readability previews */
-        preg_match_all ($regex, $text, $urlStore, PREG_SET_ORDER); //Gets utls and stores in array
+        preg_match_all ($regex, $text, $urlStore, PREG_SET_ORDER); //Gets urls and stores in array
         
         foreach ($urlStore as $u) { //loops through each URL and grabs previews
         	$linkURL = 'http'.$u[1].'://'.$u[2].$u[3].$u[4];
+        	
+        	// Check to see if we have a PDF and if so try and preview with an inbrowser PDF reader
+        	
+        	$catchDocument = substr($u[4], -4);
+        	if ($catchDocument == '.pdf') {
+        		if ($CFG->filter_readability_enable_pdf_Preview == 1) {
+        		$text = '<iframe class="container well well-small span10" style="height: 400px;" src="'.$CFG->wwwroot.'/filter/readability/mediaviewer/pdf.js/web/viewer.html?file='.$linkURL.'" />';
+        		}
+        		} //End of PDF check
+        	else {
         
         	$urlcontents = file_get_contents($readability_baseURL.$linkURL."&token=".$readability_token);
         	$jsonvalue = json_decode($urlcontents,true);
@@ -165,6 +175,7 @@ class filter_readability extends moodle_text_filter {
         	
         	/* perform find and replace on origional url to insert the preview */
         	$text = str_replace ($linkURL, $textReplace, $text);
+        	}
         }
         
       
@@ -200,14 +211,15 @@ if ($CFG->filter_readability_toggle_info == 1) { //Display domain and author inf
 	/* from web address */
 	$domain = substr($json['domain'], strpos($json['domain'],'.')+1);
 	/* get favicon */
-	$domain_img = '<img src="http://g.etfv.co/http://'.$json['domain'].'" width="16px" /> ';
-
+	
+	$domain_img = '<img class="nolink" src="http://g.etfv.co/http://'.$json['domain'].'" /> ';
+	
 /* if author exists then display bullet before */
 if ($json['author']) 
 	{$author = ' &#149; '.$json['author'];
 	} else {$author = "";}
 
-$link_info = '<small>'.$domain_img.$json['domain'].$author.'</small>';
+$link_info = '<small class="nolink">'.$domain_img.$json['domain'].$author.'</small>';
 } else
 {$link_info = '';}
 
