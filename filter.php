@@ -226,12 +226,13 @@ $link_info = '<small class="nolink">'.$domain_img.$json['domain'].$author.'</sma
 	
 	/* Put all the links together */    
         		$textReplace = '<div class="readability_filter media">';
-        		$textReplace .= '<a class="pull-left" href="'.$json['url'].'" target="_new">';
+        		$textReplace .= '<a class="pull-left link_image" href="'.$json['url'].'" target="_new">';
         		$textReplace .= $link_image;
         		$textReplace .= '<div class="media-body">';
         		$textReplace .= '<a href="'.$json['url'].'" target="_new">'.$json['title'].'</a><br />';
         		$textReplace .= $link_info;
         		$textReplace .= '<div class="media">'.$link_intro.'</div>';
+        		$textReplace .= '<div class="webpageContainer"><div class="webpageContent"'.$json['content'].'</div></div>';
         		$textReplace .= '</div></div>';
         	return $textReplace;
 }
