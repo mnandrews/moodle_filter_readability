@@ -202,6 +202,11 @@ if ($CFG->filter_readability_toggle_intro == 1	) { //Display intro or not
 	{$link_intro = '';
 }
 
+if ($CFG->filter_readability_toggle_fullcontent == 1) {
+	$full_content = '<div class="webpageContainer"><div class="webpageContent"'.$json['content'].'</div>';
+} else 
+{$full_content = '';}
+
 if ($CFG->filter_readability_toggle_image == 1) { //Display weblink images or not
 	$link_image = '<img class="media-object" src="'.$json['lead_image_url'].'"/></a>';
 	} else
@@ -232,7 +237,7 @@ $link_info = '<small class="nolink">'.$domain_img.$json['domain'].$author.'</sma
         		$textReplace .= '<a href="'.$json['url'].'" target="_new">'.$json['title'].'</a><br />';
         		$textReplace .= $link_info;
         		$textReplace .= '<div class="media">'.$link_intro.'</div>';
-        		$textReplace .= '<div class="webpageContainer"><div class="webpageContent"'.$json['content'].'</div></div>';
+        		$textReplace .= $full_content;
         		$textReplace .= '</div></div>';
         	return $textReplace;
 }
