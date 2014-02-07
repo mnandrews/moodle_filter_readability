@@ -152,19 +152,13 @@ class filter_readability extends moodle_text_filter {
         /* START ----- Code to extract URL's, place into arrays and transform into readability previews */
         preg_match_all ($regex, $text, $urlStore, PREG_SET_ORDER); //Gets urls and stores in array
         
+        
         foreach ($urlStore as $u) { //loops through each URL and grabs previews
         	$linkURL = 'http'.$u[1].'://'.$u[2].$u[3].$u[4];
         	
-        	// Check to see if we have a PDF and if so try and preview with an inbrowser PDF reader
         	
-        	$catchDocument = substr($u[4], -4);
-        	if ($catchDocument == '.pdf') {
-        		if ($CFG->filter_readability_enable_pdf_Preview == 1) {
-        		$text = '<iframe class="container well well-small span10" style="height: 400px;" src="'.$CFG->wwwroot.'/filter/readability/mediaviewer/pdf.js/web/viewer.html?file='.$linkURL.'" />';
-        		}
-        		} //End of PDF check
-        	else {
-        
+        	// Check to see if we have a PDF and if so try and preview with an inbrowser PDF reader
+
         	$urlcontents = file_get_contents($readability_baseURL.$linkURL."&token=".$readability_token);
         	$jsonvalue = json_decode($urlcontents,true);
         	$jsonErrorvalue = json_last_error();
@@ -173,11 +167,9 @@ class filter_readability extends moodle_text_filter {
         		$textReplace = generate_Preview ($jsonvalue);
         	}
         	
-        	/* perform find and replace on origional url to insert the preview */
+        	/* perform find and replace on original url to insert the preview */
         	$text = str_replace ($linkURL, $textReplace, $text);
-        	}
-        }
-        
+        	}        
       
     }
     
