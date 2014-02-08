@@ -164,7 +164,7 @@ class filter_readability extends moodle_text_filter {
   				
   				
   				$counter = count($counter);
-  				echo $counter;
+  				
 
             	if ($counter >= 1) {
             	$text = $linkURL;
