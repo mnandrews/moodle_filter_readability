@@ -158,11 +158,17 @@ class filter_readability extends moodle_text_filter {
         foreach ($urlStore as $u) { //loops through each URL and grabs previews
         	$linkURL = 'http'.$u[1].'://'.$u[2].$u[3].$u[4];
         	
-        		$search = '/(pdf|jpg|png|gif)/'; //Check that we are dealing with a webpage
-  				$text = preg_match($search,$linkURL,$count);	
-            	if (count($count) > 1) {
-            	echo 'it is a PDF';
+  				
+  				$exclude = '/(google.com|yahoo.com|bbc.co.uk|pdf|png)/';
+  				preg_match($exclude, $linkURL,$counter);
+  				
+  				
+  				$counter = count($counter);
+  				echo $counter;
+
+            	if ($counter >= 1) {
             	$text = $linkURL;
+            	//echo $text;
             	}
             	else {
         			$urlcontents = cGetFile($readability_baseURL.$linkURL."&token=".$readability_token);
@@ -175,7 +181,9 @@ class filter_readability extends moodle_text_filter {
         			}
         	
         			/* perform find and replace on original url to insert the preview */
+        				
         				$text = str_replace ($linkURL, $textReplace, $text);
+        				
         			}        
       
     			}
