@@ -168,7 +168,7 @@ class filter_readability extends moodle_text_filter {
 
         
         	if ($jsonErrorvalue == 0) { //If error in Json don't parse 
-        		$textReplace = generate_Preview ($jsonvalue);
+        		$textReplace = Process_JSON ($jsonvalue);
         	}
         	
         	/* perform find and replace on original url to insert the preview */
@@ -185,48 +185,54 @@ Input @json information
 Output string containing html output
 
 */
-function generate_Preview($json) {
+function Process_JSON($json) {
 global $CFG;
 
 /* reading values from settings screen and acting */
 
-if ($CFG->filter_readability_toggle_intro == 1	) { //Display intro or not
-	if (!$json['dek']) //selects which introduction to display 
-		{$link_intro = $json['excerpt'];}
-	else {$link_intro = $json['dek'];}
-} else
-	{$link_intro = '';
-}
 
-if ($CFG->filter_readability_toggle_fullcontent == 1) {
-	$full_content = '<div class="webpageContainer"><div class="webpageContent"'.$json['content'].'</div>';
-} else 
-{$full_content = '';}
+if (isset($json['error'])) {} //If readibility can't process the JSON it returns an 'error' node. Using this to stop the processing
+else {
 
-if ($CFG->filter_readability_toggle_image == 1) { //Display weblink images or not
-	$link_image = '<img class="media-object" src="'.$json['lead_image_url'].'"/></a>';
+
+	if ($CFG->filter_readability_toggle_intro == 1	) { //Display intro or not
+		if (!$json['dek']) //selects which introduction to display 
+			{$link_intro = $json['excerpt'];}
+		else {$link_intro = $json['dek'];}
 	} else
-	{$link_image = '';}
+		{$link_intro = '';
+	}
 
-if ($CFG->filter_readability_toggle_info == 1) { //Display domain and author information
-	/* from web address */
-	$domain = substr($json['domain'], strpos($json['domain'],'.')+1);
-	/* get favicon */
-	
-	$domain_img = '<img class="nolink" src="http://g.etfv.co/http://'.$json['domain'].'" /> ';
-	
-/* if author exists then display bullet before */
-if ($json['author']) 
-	{$author = ' &#149; '.$json['author'];
-	} else {$author = "";}
+	if ($CFG->filter_readability_toggle_fullcontent == 1) {
+		$full_content = '<div class="webpageContainer"><div class="webpageContent"'.$json['content'].'</div>';
+	} else 
+	{$full_content = '';}
 
-$link_info = '<small class="nolink">'.$domain_img.$json['domain'].$author.'</small>';
-} else
-{$link_info = '';}
+	if ($CFG->filter_readability_toggle_image == 1) { //Display weblink images or not
+		$link_image = '<img class="media-object" src="'.$json['lead_image_url'].'"/></a>';
+		} else
+		{$link_image = '';}
+
+	if ($CFG->filter_readability_toggle_info == 1) { //Display domain and author information
+		/* from web address */
+		$domain = substr($json['domain'], strpos($json['domain'],'.')+1);
+		/* get favicon */
+	
+		$domain_img = '<img class="nolink" src="http://g.etfv.co/http://'.$json['domain'].'" /> ';
+	
+	/* if author exists then display bullet before */
+	if ($json['author']) 
+		{$author = ' &#149; '.$json['author'];
+		} else {$author = "";}
+
+	$link_info = '<small class="nolink">'.$domain_img.$json['domain'].$author.'</small>';
+	} else
+	{$link_info = '';}
 
 	
 	/* Put all the links together */    
         		$textReplace = '<div class="readability_filter media">';
+        		$textReplace .= $json['error'];
         		$textReplace .= '<a class="pull-left link_image" href="'.$json['url'].'" target="_new">';
         		$textReplace .= $link_image;
         		$textReplace .= '<div class="media-body">';
@@ -237,6 +243,7 @@ $link_info = '<small class="nolink">'.$domain_img.$json['domain'].$author.'</sma
         		$textReplace .= '</div></div>';
         	return $textReplace;
 }
+}
 
 
 function cGetFile($urlString){
@@ -244,7 +251,6 @@ function cGetFile($urlString){
 	curl_setopt($curl_handle, CURLOPT_URL,$urlString);
 	curl_setopt($curl_handle, CURLOPT_CONNECTTIMEOUT, 2);
 	curl_setopt($curl_handle, CURLOPT_RETURNTRANSFER, 1);
-	//curl_setopt($curl_handle, CURLOPT_USERAGENT, 'Your application name');
 		return curl_exec($curl_handle);
 	curl_close($curl_handle);
 }
