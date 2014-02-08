@@ -56,8 +56,11 @@ class filter_readability extends moodle_text_filter {
             return $text;
         }
         if (in_array($options['originalformat'], explode(',', $this->get_global_config('formats')))) {
+        	$originalText = $text;
             $this->convert_urls_into_previews($text);
         }
+        
+        echo $originalText;
         return $text;
     }
 
@@ -157,11 +160,12 @@ class filter_readability extends moodle_text_filter {
         	$linkURL = 'http'.$u[1].'://'.$u[2].$u[3].$u[4];
         	
         	
-        	// Check to see if we have a PDF and if so try and preview with an inbrowser PDF reader
-
-        	$urlcontents = file_get_contents($readability_baseURL.$linkURL."&token=".$readability_token);
+        	
+        	//$urlcontents = file_get_contents($readability_baseURL.$linkURL."&token=".$readability_token);
+        	$urlcontents = cGetFile($readability_baseURL.$linkURL."&token=".$readability_token);
         	$jsonvalue = json_decode($urlcontents,true);
         	$jsonErrorvalue = json_last_error();
+
         
         	if ($jsonErrorvalue == 0) { //If error in Json don't parse 
         		$textReplace = generate_Preview ($jsonvalue);
@@ -234,6 +238,16 @@ $link_info = '<small class="nolink">'.$domain_img.$json['domain'].$author.'</sma
         	return $textReplace;
 }
 
+
+function cGetFile($urlString){
+	$curl_handle = curl_init();
+	curl_setopt($curl_handle, CURLOPT_URL,$urlString);
+	curl_setopt($curl_handle, CURLOPT_CONNECTTIMEOUT, 2);
+	curl_setopt($curl_handle, CURLOPT_RETURNTRANSFER, 1);
+	//curl_setopt($curl_handle, CURLOPT_USERAGENT, 'Your application name');
+		return curl_exec($curl_handle);
+	curl_close($curl_handle);
+}
 
 /**
  * Change links to images into embedded images.
