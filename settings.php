@@ -44,14 +44,18 @@ if ($ADMIN->fulltree) {
             get_string('info', 'filter_readability'),
             get_string('info_desc', 'filter_readability'),
             1));
+            
+    $settings->add(new admin_setting_configcheckbox('filter_readability_toggle_fullcontent',
+            get_string('fullcontent', 'filter_readability'),
+            get_string('fullcontent_desc', 'filter_readability'),
+            1));
+    
+    
+    $settings->add(new admin_setting_configcheckbox('filter_readability_enable_pdf_Preview',
+            get_string('pdf', 'filter_readability'),
+            get_string('pdf_desc', 'filter_readability'),
+            1));
 
-        
-        
-        //TODO: Option to toggle description disaply
-        // toggle preview option
-        // toggle link to origional
-        // toggle display of date and author
-        // toggle intro text
-        // toggle domain image
+
 
 }

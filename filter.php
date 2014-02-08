@@ -56,9 +56,11 @@ class filter_readability extends moodle_text_filter {
             return $text;
         }
         if (in_array($options['originalformat'], explode(',', $this->get_global_config('formats')))) {
+        	$originalText = $text;
             $this->convert_urls_into_previews($text);
         }
-        return $text;
+        
+       return $text; 
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -150,10 +152,12 @@ class filter_readability extends moodle_text_filter {
         $readability_token = $CFG->filter_readability_token;
         
         /* START ----- Code to extract URL's, place into arrays and transform into readability previews */
-        preg_match_all ($regex, $text, $urlStore, PREG_SET_ORDER); //Gets utls and stores in array
+        preg_match_all ($regex, $text, $urlStore, PREG_SET_ORDER); //Gets urls and stores in array
+        
         
         foreach ($urlStore as $u) { //loops through each URL and grabs previews
         	$linkURL = 'http'.$u[1].'://'.$u[2].$u[3].$u[4];
+<<<<<<< HEAD
         	$urlcontents = url_get_contents($readability_baseURL.$linkURL."&token=".$readability_token);
         		$jsonvalue = json_decode($urlcontents,true);
         		$jsonErrorvalue = json_last_error();
@@ -164,16 +168,41 @@ class filter_readability extends moodle_text_filter {
         			} else {$textreplace = 'cannot do anything with this';}
         			
         	}
+=======
+>>>>>>> Developmental
         	
-        	/* perform find and replace on origional url to insert the preview */
-        	$text = str_replace ($linkURL, $textReplace, $text);
-        }
+  				
+  				$exclude = '/(google.com|yahoo.com|bbc.co.uk|pdf|png)/';
+  				preg_match($exclude, $linkURL,$counter);
+  				
+  				
+  				$counter = count($counter);
+  				
+
+            	if ($counter >= 1) {
+            	$text = $linkURL;
+            	//echo $text;
+            	}
+            	else {
+        			$urlcontents = cGetFile($readability_baseURL.$linkURL."&token=".$readability_token);
+        			$jsonvalue = json_decode($urlcontents,true);
+        			$jsonErrorvalue = json_last_error();
+
         
+        			if ($jsonErrorvalue == 0) { //If error in Json don't parse 
+        				$textReplace = Process_JSON ($jsonvalue);
+        			}
+        	
+        			/* perform find and replace on original url to insert the preview */
+        				
+        				$text = str_replace ($linkURL, $textReplace, $text);
+        				
+        			}        
       
-    }
+    			}
     
-    
-}
+			}    
+		}
 
 
 function url_get_contents ($Url) {
@@ -193,11 +222,12 @@ Input @json information
 Output string containing html output
 
 */
-function generate_Preview($json) {
+function Process_JSON($json) {
 global $CFG;
 
 /* reading values from settings screen and acting */
 
+<<<<<<< HEAD
 
 if ($CFG->filter_readability_toggle_intro == 1	) { //Display intro or not
 	if (!$json['dek']) //selects which introduction to display 
@@ -206,39 +236,74 @@ if ($CFG->filter_readability_toggle_intro == 1	) { //Display intro or not
 } else
 	{$link_intro = '';
 }
+=======
+>>>>>>> Developmental
 
-if ($CFG->filter_readability_toggle_image == 1) { //Display weblink images or not
-	$link_image = '<img class="media-object" src="'.$json['lead_image_url'].'"/></a>';
+if (isset($json['error'])) {
+	return 'Errorflag';
+} //If readibility can't process the JSON it returns an 'error' node. Using this to stop the processing
+else {
+
+
+	if ($CFG->filter_readability_toggle_intro == 1	) { //Display intro or not
+		if (!$json['dek']) //selects which introduction to display 
+			{$link_intro = $json['excerpt'];}
+		else {$link_intro = $json['dek'];}
 	} else
-	{$link_image = '';}
+		{$link_intro = '';
+	}
 
-if ($CFG->filter_readability_toggle_info == 1) { //Display domain and author information
-	/* from web address */
-	$domain = substr($json['domain'], strpos($json['domain'],'.')+1);
-	/* get favicon */
-	$domain_img = '<img src="http://g.etfv.co/http://'.$json['domain'].'" width="16px" /> ';
+	if ($CFG->filter_readability_toggle_fullcontent == 1) {
+		$full_content = '<div class="webpageContainer"><div class="webpageContent"'.$json['content'].'</div>';
+	} else 
+	{$full_content = '';}
 
-/* if author exists then display bullet before */
-if ($json['author']) 
-	{$author = ' &#149; '.$json['author'];
-	} else {$author = "";}
+	if ($CFG->filter_readability_toggle_image == 1) { //Display weblink images or not
+		$link_image = '<img class="media-object" src="'.$json['lead_image_url'].'"/></a>';
+		} else
+		{$link_image = '';}
 
-$link_info = '<small>'.$domain_img.$json['domain'].$author.'</small>';
-} else
-{$link_info = '';}
+	if ($CFG->filter_readability_toggle_info == 1) { //Display domain and author information
+		/* from web address */
+		$domain = substr($json['domain'], strpos($json['domain'],'.')+1);
+		/* get favicon */
+	
+		$domain_img = '<img class="nolink" src="http://g.etfv.co/http://'.$json['domain'].'" /> ';
+	
+	/* if author exists then display bullet before */
+	if ($json['author']) 
+		{$author = ' &#149; '.$json['author'];
+		} else {$author = "";}
+
+	$link_info = '<small class="nolink">'.$domain_img.$json['domain'].$author.'</small>';
+	} else
+	{$link_info = '';}
 
 	
 	/* Put all the links together */    
         		$textReplace = '<div class="readability_filter media">';
-        		$textReplace .= '<a class="pull-left" href="'.$json['url'].'" target="_new">';
+        		$textReplace .= '<a class="pull-left link_image" href="'.$json['url'].'" target="_new">';
         		$textReplace .= $link_image;
         		$textReplace .= '<div class="media-body">';
         		$textReplace .= '<a href="'.$json['url'].'" target="_new">'.$json['title'].'</a><br />';
         		$textReplace .= $link_info;
         		$textReplace .= '<div class="media">'.$link_intro.'</div>';
+        		$textReplace .= $full_content;
         		$textReplace .= '</div></div>';
         	return $textReplace;
 }
+}
+
+
+function cGetFile($urlString){
+	$curl_handle = curl_init();
+	curl_setopt($curl_handle, CURLOPT_URL,$urlString);
+	curl_setopt($curl_handle, CURLOPT_CONNECTTIMEOUT, 2);
+	curl_setopt($curl_handle, CURLOPT_RETURNTRANSFER, 1);
+		return curl_exec($curl_handle);
+	curl_close($curl_handle);
+}
+
 
 
 /**
