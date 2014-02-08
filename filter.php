@@ -60,8 +60,12 @@ class filter_readability extends moodle_text_filter {
             $this->convert_urls_into_previews($text);
         }
         
-        echo $originalText;
-        return $text;
+        //if ($text = 'Errorflag') {
+        //	echo '<h2>sdfsdfsdf</h2>';
+       	//	return $originalText;
+       // }
+       // else {
+       return $text; //}
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -191,7 +195,9 @@ global $CFG;
 /* reading values from settings screen and acting */
 
 
-if (isset($json['error'])) {} //If readibility can't process the JSON it returns an 'error' node. Using this to stop the processing
+if (isset($json['error'])) {
+	return 'Errorflag';
+} //If readibility can't process the JSON it returns an 'error' node. Using this to stop the processing
 else {
 
 
@@ -232,7 +238,6 @@ else {
 	
 	/* Put all the links together */    
         		$textReplace = '<div class="readability_filter media">';
-        		$textReplace .= $json['error'];
         		$textReplace .= '<a class="pull-left link_image" href="'.$json['url'].'" target="_new">';
         		$textReplace .= $link_image;
         		$textReplace .= '<div class="media-body">';
