@@ -60,12 +60,7 @@ class filter_readability extends moodle_text_filter {
             $this->convert_urls_into_previews($text);
         }
         
-        //if ($text = 'Errorflag') {
-        //	echo '<h2>sdfsdfsdf</h2>';
-       	//	return $originalText;
-       // }
-       // else {
-       return $text; //}
+       return $text; 
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -163,26 +158,30 @@ class filter_readability extends moodle_text_filter {
         foreach ($urlStore as $u) { //loops through each URL and grabs previews
         	$linkURL = 'http'.$u[1].'://'.$u[2].$u[3].$u[4];
         	
-        	
-        	
-        	//$urlcontents = file_get_contents($readability_baseURL.$linkURL."&token=".$readability_token);
-        	$urlcontents = cGetFile($readability_baseURL.$linkURL."&token=".$readability_token);
-        	$jsonvalue = json_decode($urlcontents,true);
-        	$jsonErrorvalue = json_last_error();
+        		$search = '/(pdf|jpg|png|gif)/'; //Check that we are dealing with a webpage
+  				$text = preg_match($search,$linkURL,$count);	
+            	if (count($count) > 1) {
+            	echo 'it is a PDF';
+            	$text = $linkURL;
+            	}
+            	else {
+        			$urlcontents = cGetFile($readability_baseURL.$linkURL."&token=".$readability_token);
+        			$jsonvalue = json_decode($urlcontents,true);
+        			$jsonErrorvalue = json_last_error();
 
         
-        	if ($jsonErrorvalue == 0) { //If error in Json don't parse 
-        		$textReplace = Process_JSON ($jsonvalue);
-        	}
+        			if ($jsonErrorvalue == 0) { //If error in Json don't parse 
+        				$textReplace = Process_JSON ($jsonvalue);
+        			}
         	
-        	/* perform find and replace on original url to insert the preview */
-        	$text = str_replace ($linkURL, $textReplace, $text);
-        	}        
+        			/* perform find and replace on original url to insert the preview */
+        				$text = str_replace ($linkURL, $textReplace, $text);
+        			}        
       
-    }
+    			}
     
-    
-}
+			}    
+		}
 
 /* Function to manage the assembly of the final output
 Input @json information
@@ -259,6 +258,8 @@ function cGetFile($urlString){
 		return curl_exec($curl_handle);
 	curl_close($curl_handle);
 }
+
+
 
 /**
  * Change links to images into embedded images.
