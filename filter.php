@@ -154,13 +154,15 @@ class filter_readability extends moodle_text_filter {
         
         foreach ($urlStore as $u) { //loops through each URL and grabs previews
         	$linkURL = 'http'.$u[1].'://'.$u[2].$u[3].$u[4];
+        	$urlcontents = url_get_contents($readability_baseURL.$linkURL."&token=".$readability_token);
+        		$jsonvalue = json_decode($urlcontents,true);
+        		$jsonErrorvalue = json_last_error();
         
-        	$urlcontents = file_get_contents($readability_baseURL.$linkURL."&token=".$readability_token);
-        	$jsonvalue = json_decode($urlcontents,true);
-        	$jsonErrorvalue = json_last_error();
-        
-        	if ($jsonErrorvalue == 0) { //If error in Json don't parse 
-        		$textReplace = generate_Preview ($jsonvalue);
+        		if ($jsonErrorvalue == 0) { //If error in Json don't parse 
+    				if ($jsonvalue['error'] == true){
+        			$textReplace = generate_Preview ($jsonvalue);
+        			} else {$textreplace = 'cannot do anything with this';}
+        			
         	}
         	
         	/* perform find and replace on origional url to insert the preview */
@@ -173,6 +175,19 @@ class filter_readability extends moodle_text_filter {
     
 }
 
+
+function url_get_contents ($Url) {
+    if (!function_exists('curl_init')){ 
+        die('CURL is not installed!');
+    }
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $Url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    $output = curl_exec($ch);
+    curl_close($ch);
+    return $output;
+}
+
 /* Function to manage the assembly of the final output
 Input @json information
 Output string containing html output
@@ -182,6 +197,7 @@ function generate_Preview($json) {
 global $CFG;
 
 /* reading values from settings screen and acting */
+
 
 if ($CFG->filter_readability_toggle_intro == 1	) { //Display intro or not
 	if (!$json['dek']) //selects which introduction to display 
