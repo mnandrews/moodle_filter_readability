@@ -157,19 +157,7 @@ class filter_readability extends moodle_text_filter {
         
         foreach ($urlStore as $u) { //loops through each URL and grabs previews
         	$linkURL = 'http'.$u[1].'://'.$u[2].$u[3].$u[4];
-<<<<<<< HEAD
-        	$urlcontents = url_get_contents($readability_baseURL.$linkURL."&token=".$readability_token);
-        		$jsonvalue = json_decode($urlcontents,true);
-        		$jsonErrorvalue = json_last_error();
-        
-        		if ($jsonErrorvalue == 0) { //If error in Json don't parse 
-    				if ($jsonvalue['error'] == true){
-        			$textReplace = generate_Preview ($jsonvalue);
-        			} else {$textreplace = 'cannot do anything with this';}
-        			
-        	}
-=======
->>>>>>> Developmental
+
         	
   				
   				$exclude = '/(google.com|yahoo.com|bbc.co.uk|pdf|png)/';
@@ -227,17 +215,7 @@ global $CFG;
 
 /* reading values from settings screen and acting */
 
-<<<<<<< HEAD
 
-if ($CFG->filter_readability_toggle_intro == 1	) { //Display intro or not
-	if (!$json['dek']) //selects which introduction to display 
-		{$link_intro = $json['excerpt'];}
-	else {$link_intro = $json['dek'];}
-} else
-	{$link_intro = '';
-}
-=======
->>>>>>> Developmental
 
 if (isset($json['error'])) {
 	return 'Errorflag';
