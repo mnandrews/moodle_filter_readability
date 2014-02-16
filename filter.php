@@ -160,17 +160,24 @@ class filter_readability extends moodle_text_filter {
 
         	
   				
-  				$exclude = '/(google.com|yahoo.com|bbc.co.uk|pdf|png)/';
-  				preg_match($exclude, $linkURL,$counter);
+  				$excludeDomains = '/(google.com|yahoo.com|bbc.co.uk)/';
+  				preg_match($excludeDomains, $linkURL,$domainCounter);
   				
+  				$renderableOfficeFormats = '/(ppt|doc|xls)/';
+  				preg_match($renderableOfficeFormats, $linkURL, $officeCounter);
   				
-  				$counter = count($counter);
+  				$renderablegoogleFormats = '/(pdf|)/';
   				
 
-            	if ($counter >= 1) {
-            	$text = $linkURL;
-            	//echo $text;
+  				$domainCounter = count($domainCounter);
+  				$officeCounter = count($officeCounter);
+            	if ($domainCounter >= 1) {
+            		$text = $linkURL;
             	}
+            	//elseif ($officeCounter >= 10) {
+            	//	$text = str_replace ($linkURL, 
+            	//	'<iframe class="nolink" src="http://view.officeapps.live.com/op/view.aspx?src='.$linkURL.'" />' ,$text);
+            	//}
             	else {
         			$urlcontents = cGetFile($readability_baseURL.$linkURL."&token=".$readability_token);
         			$jsonvalue = json_decode($urlcontents,true);
