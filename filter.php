@@ -147,6 +147,7 @@ class filter_readability extends moodle_text_filter {
             $regex = '#' . $regex . '#ui';
         } else {
             $regex = '#' . preg_replace(array('\pLl', '\PL'), 'a-z', $regex) . '#i';
+            
         }
 		$readability_baseURL = 'http://www.readability.com/api/content/v1/parser?url=';
         $readability_token = $CFG->filter_readability_token;
@@ -157,7 +158,7 @@ class filter_readability extends moodle_text_filter {
         
         foreach ($urlStore as $u) { //loops through each URL and grabs previews
         	$linkURL = 'http'.$u[1].'://'.$u[2].$u[3].$u[4];
-
+			
         	
   				
   				$excludeDomains = '/(google.com|yahoo.com|bbc.co.uk)/';
@@ -174,6 +175,7 @@ class filter_readability extends moodle_text_filter {
             	if ($domainCounter >= 1) {
             		$text = $linkURL;
             	}
+            	 
             	//elseif ($officeCounter >= 10) {
             	//	$text = str_replace ($linkURL, 
             	//	'<iframe class="nolink" src="http://view.officeapps.live.com/op/view.aspx?src='.$linkURL.'" />' ,$text);
@@ -182,14 +184,13 @@ class filter_readability extends moodle_text_filter {
         			$urlcontents = cGetFile($readability_baseURL.$linkURL."&token=".$readability_token);
         			$jsonvalue = json_decode($urlcontents,true);
         			$jsonErrorvalue = json_last_error();
-
+					
         
         			if ($jsonErrorvalue == 0) { //If error in Json don't parse 
         				$textReplace = Process_JSON ($jsonvalue);
         			}
         	
         			/* perform find and replace on original url to insert the preview */
-        				
         				$text = str_replace ($linkURL, $textReplace, $text);
         				
         			}        
@@ -201,6 +202,8 @@ class filter_readability extends moodle_text_filter {
 
 
 function url_get_contents ($Url) {
+
+
     if (!function_exists('curl_init')){ 
         die('CURL is not installed!');
     }
@@ -209,6 +212,7 @@ function url_get_contents ($Url) {
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     $output = curl_exec($ch);
     curl_close($ch);
+    
     return $output;
 }
 
