@@ -161,7 +161,8 @@ class filter_readability extends moodle_text_filter {
 			
         	
   				
-  				$excludeDomains = '/(google.com|yahoo.com|bbc.co.uk)/';
+  				
+  				$excludeDomains = '/('.$CFG->filter_readability_excludedomain.')/';
   				preg_match($excludeDomains, $linkURL,$domainCounter);
   				
   				$renderableOfficeFormats = '/(ppt|doc|xls)/';
