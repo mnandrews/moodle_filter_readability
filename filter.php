@@ -159,28 +159,35 @@ class filter_readability extends moodle_text_filter {
         foreach ($urlStore as $u) { //loops through each URL and grabs previews
         	$linkURL = 'http'.$u[1].'://'.$u[2].$u[3].$u[4];
 			
-        	
-  				
-  				
+
   				$excludeDomains = '/('.$CFG->filter_readability_excludedomain.')/';
   				preg_match($excludeDomains, $linkURL,$domainCounter);
   				
-  				$renderableOfficeFormats = '/(ppt|doc|xls)/';
+  				
+  				$renderableOfficeFormats = '/(.ppt|.doc|.xls)/';
   				preg_match($renderableOfficeFormats, $linkURL, $officeCounter);
   				
-  				$renderablegoogleFormats = '/(pdf|)/';
+  				//$renderablegoogleFormats = '/(.pdf)/';
+  				//preg_match($renderablegoogleFormats, $linkURL, $googledocsCounter);
   				
 
   				$domainCounter = count($domainCounter);
   				$officeCounter = count($officeCounter);
+  				//$googledocsCounter = count($renderablegoogleFormats);
             	if ($domainCounter >= 1) {
             		$text = $linkURL;
             	}
             	 
-            	//elseif ($officeCounter >= 10) {
+            	elseif ($officeCounter >= 1) {
+            			$text = str_replace ($linkURL, 
+            			'<iframe class="nolink span12" height="500px" src="http://view.officeapps.live.com/op/view.aspx?src='.$linkURL.'"></iframe>' ,$text);
+            	}
+            	
+            	//elseif ($renderablegoogleFormats >= 1) {
             	//	$text = str_replace ($linkURL, 
-            	//	'<iframe class="nolink" src="http://view.officeapps.live.com/op/view.aspx?src='.$linkURL.'" />' ,$text);
+            	//	'<iframe class="nolink span12" height="500px" src="https://docs.google.com/viewer?url='.$linkURL.'"></iframe>' ,$text);
             	//}
+            	
             	else {
         			$urlcontents = cGetFile($readability_baseURL.$linkURL."&token=".$readability_token);
         			$jsonvalue = json_decode($urlcontents,true);
@@ -203,8 +210,6 @@ class filter_readability extends moodle_text_filter {
 
 
 function url_get_contents ($Url) {
-
-
     if (!function_exists('curl_init')){ 
         die('CURL is not installed!');
     }
