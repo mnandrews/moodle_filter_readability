@@ -254,7 +254,7 @@ else {
 	{$full_content = '';}
 
 	if ($CFG->filter_readability_toggle_image == 1) { //Display weblink images or not
-		$link_image = '<img class="media-object" src="'.$json['lead_image_url'].'"/></a>';
+		$link_image = '<img class="media-object img-rounded" width="150px" src="'.$json['lead_image_url'].'"/></a>';
 		} else
 		{$link_image = '';}
 
