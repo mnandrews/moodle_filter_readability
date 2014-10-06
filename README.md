@@ -1,10 +1,10 @@
 moodle_filter_readability
 =========================
-Built on top of the urltolink filter this filter uses the readibility API (freely avalible for non-commercial use) to grab page title, image and description to display and attactive informative link.
+Built on top of the urltolink filter this filter uses the readability API (freely avalible for non-commercial use) to grab page title, image and description to display an attactive informative link.
 Please note this is an early release that does work on 2.6 but I doubt conforms to the moodle coding guidelines.
 
 <strong>Wish list:</strong></br />
-- When clicking link to load up a 'readibiltiy formatted' version of the web page within a pop-up/lighbox
+- When clicking link to load up a 'readability formatted' version of the web page within a pop-up/lighbox
 
 <h3> To install </h3>
 <ol>
@@ -18,6 +18,7 @@ Please note this is an early release that does work on 2.6 but I doubt conforms 
 <h3>Known bugs</h3>
 <ul>
 <li>Does not play nicely with the default urltolink filter, please disable at site level for this to work</li>
+<li>the 'Exclude domain' field must have a value to work - you can put anything in it</li>
 </ul>
 
 
