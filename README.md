@@ -15,6 +15,11 @@ Please note this is an early release that does work on 2.6 but I doubt conforms 
 
 <p>If this looks interesting please fork and further develop, i'm reaching my limit of php knowledge. - Thanks!</p>
 
+<h3>Known bugs</h3>
+<ul>
+<li>Does not play nicely with the default urltolink filter, please disable at site level for this to work</li>
+</ul>
+
 
 <h3>Credits:</h3>
 <p>As with many things in moodle this filter uses much of the URL identification and formatting code created by David Mudrak - thankyou sir!</p>
