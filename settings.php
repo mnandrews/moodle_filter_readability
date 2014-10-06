@@ -54,10 +54,10 @@ if ($ADMIN->fulltree) {
     		get_string('excludedomain', 'filter_readability'),
     		get_string('excludedomain_desc', 'filter_readability'), 'excludedomain', PARAM_NOTAGS));
     
-    $settings->add(new admin_setting_configcheckbox('filter_readability_enable_pdf_Preview',
+   /* $settings->add(new admin_setting_configcheckbox('filter_readability_enable_pdf_Preview',
             get_string('pdf', 'filter_readability'),
             get_string('pdf_desc', 'filter_readability'),
-            1));
+            0));*/
 
 
 
